@@ -99,18 +99,6 @@ Each main section is organized as follows:
 - Documentation Guidelines
 - Testing Guidelines
 
-## Deployment
+### deployment
 
-The documentation site can be deployed on any platform that supports Next.js applications, such as:
-
-- [Vercel](https://vercel.com) (recommended)
-- [Netlify](https://netlify.com)
-- [GitHub Pages](https://pages.github.com)
-
-For the easiest deployment experience, we recommend using Vercel:
-
-```bash
-npm run build
-# Deploy using Vercel CLI
-vercel
-```
+ -we will use firebase for deployment
