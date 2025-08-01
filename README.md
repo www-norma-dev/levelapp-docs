@@ -1,4 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# LevelApp Documentation
+
+This repository contains the official documentation for LevelApp, an AI evaluation framework for continuous testing. The documentation is built using [Next.js](https://nextjs.org) and [Nextra](https://nextra.site), a documentation framework on top of Next.js.
+
+## Documentation Structure
+
+```
+levelapp-docs/
+├── pages/                      # Root content folder for Nextra
+│   ├── index.mdx               # Homepage
+│   ├── _meta.js                # Navigation configuration
+│   ├── getting-started/        # Getting started guides
+│   ├── core-concepts/          # Core concepts explanation
+│   ├── evaluators/             # Documentation for evaluators
+│   ├── api-reference/          # API documentation
+│   ├── guides/                 # How-to guides
+│   ├── examples/               # Example use cases
+│   └── contributing/           # Contribution guidelines
+├── public/                     # Static assets
+│   ├── images/                 # Images for documentation
+│   ├── diagrams/               # Architecture diagrams
+│   └── assets/                 # Other assets
+├── components/                 # Custom React components
+├── styles/                     # CSS styles
+├── theme.config.jsx            # Nextra theme configuration
+├── next.config.mjs             # Next.js configuration
+└── package.json                # Project dependencies
+```
 
 ## Getting Started
 
@@ -16,25 +43,74 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+You can start editing the content by modifying files in the `pages` directory. The site auto-updates as you edit the files.
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Content Structure
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+Each main section is organized as follows:
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Getting Started
+- Overview
+- Installation
+- Configuration
+- First Evaluation
+- Understanding Results
 
-## Learn More
+### Core Concepts
+- Overview
+- Architecture
+- Test Batches
+- Simulators
+- Evaluators
+- Scoring
 
-To learn more about Next.js, take a look at the following resources:
+### Evaluators
+- Overview
+- Common Input/Output Format
+- OpenAI Evaluator
+- IONOS Evaluator
+- Custom Evaluators
+- Comparison
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+### API Reference
+- Overview
+- Authentication
+- Endpoints
+- Error Handling
+- Schemas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Guides
+- Creating Test Batches
+- Running Evaluations
+- Analyzing Results
+- CI/CD Integration
+- GitHub Action Integration
+- Advanced Topics
 
-## Deploy on Vercel
+### Examples
+- Chatbot Evaluation
+- RAG System Testing
+- Multi-turn Conversations
+- Comparative Testing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Contributing
+- Development Setup
+- Code Standards
+- Documentation Guidelines
+- Testing Guidelines
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## Deployment
+
+The documentation site can be deployed on any platform that supports Next.js applications, such as:
+
+- [Vercel](https://vercel.com) (recommended)
+- [Netlify](https://netlify.com)
+- [GitHub Pages](https://pages.github.com)
+
+For the easiest deployment experience, we recommend using Vercel:
+
+```bash
+npm run build
+# Deploy using Vercel CLI
+vercel
+```
