@@ -1,3 +1,122 @@
 # Custom Evaluators
 
-How to create custom evaluators.
+
+## How to Create Custom Evaluators
+
+### BaseEvaluator Abstract Class
+
+All custom evaluators must inherit from `BaseEvaluator`:
+
+```python
+from abc import ABC, abstractmethod
+from level_core.evaluators.base import BaseEvaluator
+from level_core.evaluators.schemas import EvaluationConfig, EvaluationResult
+
+class CustomEvaluator(BaseEvaluator):
+    def __init__(self, config: EvaluationConfig, logger: Logger):
+        super().__init__(config, logger)
+        # Custom initialization
+    
+    @abstractmethod
+    def build_prompt(self, generated_text: str, expected_text: str) -> str:
+        # Implement prompt construction
+        pass
+    
+    @abstractmethod
+    async def call_llm(self, prompt: str) -> Union[Dict, str]:
+        # Implement LLM API call
+        pass
+```
+
+### Required Method Implementations
+
+#### 1. build_prompt()
+
+```python
+def build_prompt(self, generated_text: str, expected_text: str) -> str:
+    """Construct evaluation prompt for your LLM"""
+    return f"""
+    You are an expert evaluator. Compare these texts:
+    
+    Expected: {expected_text}
+    Generated: {generated_text}
+    
+    Rate from 0-5 and provide justification.
+    Return JSON: {{"match_level": <0-5>, "justification": "<reason>"}}
+    """
+```
+
+#### 2. call_llm()
+
+```python
+async def call_llm(self, prompt: str) -> Union[Dict, str]:
+    """Make API call to your LLM provider"""
+    try:
+        # Implement your API call logic
+        response = await your_api_client.post(
+            url=self.config.api_url,
+            headers={"Authorization": f"Bearer {self.config.api_key}"},
+            json={"prompt": prompt, **self.config.llm_config}
+        )
+        
+        # Parse and return response
+        return self._parse_json_output(response.text)
+        
+    except Exception as e:
+        self.logger.error(f"API call failed: {e}")
+        return {"error": "API request failed", "details": str(e)}
+```
+
+### Integration with EvaluationService
+
+Register your custom evaluator:
+
+```python
+from level_core.evaluators.service import EvaluationService
+
+# Extend EvaluationService to support your evaluator
+class ExtendedEvaluationService(EvaluationService):
+    def _select_evaluator(self, provider: str) -> BaseEvaluator:
+        if provider == "custom":
+            return CustomEvaluator(self.configs[provider], self.logger)
+        else:
+            return super()._select_evaluator(provider)
+
+# Usage
+service = ExtendedEvaluationService(Logger("Service"))
+service.set_config("custom", custom_config)
+result = await service.evaluate_response("custom", output_text, reference_text)
+```
+
+### Best Practices and Patterns
+
+**1. Error Handling:**
+```python
+@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=10))
+async def call_llm(self, prompt: str) -> Union[Dict, str]:
+    # Implement with retry logic
+    pass
+```
+
+**2. JSON Parsing:**
+```python
+def _parse_json_output(self, output: str) -> Dict:
+    """Use inherited parsing method with fallbacks"""
+    return super()._parse_json_output(output)
+```
+
+**3. Metadata Collection:**
+```python
+async def call_llm(self, prompt: str) -> Union[Dict, str]:
+    response = await api_call()
+    
+    result = self._parse_json_output(response.text)
+    result["metadata"] = {
+        "inputTokens": response.usage.prompt_tokens,
+        "outputTokens": response.usage.completion_tokens,
+        "model": self.config.model_id,
+        "timestamp": datetime.utcnow().isoformat()
+    }
+    return result
+```
+

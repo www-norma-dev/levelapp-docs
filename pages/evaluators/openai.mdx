@@ -1,3 +1,111 @@
 # OpenAI Evaluator
 
-Guide to using the OpenAI evaluator.
+
+## Guide to using the OpenAI Evaluator
+
+### Configuration Setup
+
+**Environment Variables:**
+```bash
+OPENAI_API_KEY="sk-proj-your_openai_key_here"
+```
+
+**Programmatic Setup:**
+```python
+from level_core.evaluators.openai import OpenAIEvaluator
+from level_core.evaluators.schemas import EvaluationConfig
+from logging import Logger
+
+# Configure OpenAI evaluator
+config = EvaluationConfig(
+    api_key="sk-proj-your_openai_key",
+    model_id="gpt-4",
+    llm_config={
+        "temperature": 0.0,
+        "max_tokens": 150
+    }
+)
+
+evaluator = OpenAIEvaluator(config, Logger("OpenAI"))
+```
+
+### LangChain Integration
+
+The OpenAI evaluator leverages LangChain for:
+- **Structured output** with Pydantic schemas
+- **Function calling** for reliable JSON responses
+- **Prompt templates** for consistent formatting
+- **Token usage tracking** with cost calculation
+
+### Function Calling and Structured Output
+
+```python
+# The evaluator automatically uses structured output
+structured_llm = llm.with_structured_output(
+    schema=EvaluationResult, 
+    method="function_calling"
+)
+
+# Ensures reliable JSON responses matching EvaluationResult schema
+response = await chain.ainvoke({})
+```
+
+### Token Usage and Cost Tracking
+
+```python
+# Automatic cost tracking with LangChain callbacks
+with get_openai_callback() as cb:
+    response = await chain.ainvoke({})
+    
+    response.metadata = {
+        "inputTokens": cb.prompt_tokens,
+        "outputTokens": cb.completion_tokens,
+        "total_cost": cb.total_cost  # USD cost
+    }
+```
+
+### Example Usage
+
+```python
+import asyncio
+from level_core.evaluators.openai import OpenAIEvaluator
+from level_core.evaluators.schemas import EvaluationConfig
+from logging import Logger
+
+async def evaluate_with_openai():
+    # Setup
+    config = EvaluationConfig(
+        api_key="sk-proj-your_openai_key",
+        model_id="gpt-4-turbo",
+        llm_config={
+            "temperature": 0.0,
+            "max_tokens": 150
+        }
+    )
+    
+    evaluator = OpenAIEvaluator(config, Logger("OpenAI"))
+    
+    # Evaluate
+    result = await evaluator.evaluate(
+        generated_text="Machine learning is a subset of AI.",
+        expected_text="ML is a branch of artificial intelligence."
+    )
+    
+    print(f"Score: {result.match_level}/5")
+    print(f"Reasoning: {result.justification}")
+    print(f"Cost: ${result.metadata.get('total_cost', 0):.4f}")
+
+# Run evaluation
+asyncio.run(evaluate_with_openai())
+```
+
+### OpenAI-Specific Features
+
+- **GPT-4 and GPT-3.5** model support
+- **Function calling** for structured responses
+- **Detailed cost tracking** in USD
+- **Advanced prompt engineering** capabilities
+- **LangChain ecosystem** integration
+
+---
+

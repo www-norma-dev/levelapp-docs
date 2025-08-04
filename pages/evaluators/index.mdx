@@ -1,3 +1,44 @@
 # Evaluators
 
-Overview of evaluators.
+## Overview of Evaluators
+
+LevelApp evaluators are LLM-powered components that assess the quality of AI agent responses by comparing generated text against expected outputs. They provide structured scoring and detailed justifications for evaluation results.
+
+### Architecture Overview
+
+```
+BaseEvaluator (Abstract)
+├── IonosEvaluator (IONOS Cloud API)
+└── OpenAIEvaluator (OpenAI + LangChain)
+```
+
+All evaluators extend the `BaseEvaluator` abstract class and implement:
+- `build_prompt()` - Constructs evaluation prompts
+- `call_llm()` - Makes API calls to LLM providers
+- `evaluate()` - Orchestrates the evaluation process
+
+### Available Evaluator Types
+
+**🌩️ IONOS Evaluator**
+- Uses IONOS Cloud inference API
+- Direct HTTP API integration
+- Custom JSON output parsing
+- Cost-effective for European users
+
+**🤖 OpenAI Evaluator**
+- Uses OpenAI GPT models via LangChain
+- Structured output with function calling
+- Built-in token usage and cost tracking
+- Advanced prompt engineering capabilities
+
+### When to Use Each Evaluator
+
+| Scenario | Recommended Evaluator | Reason |
+|----------|----------------------|---------|
+| European deployment | IONOS | Lower latency, data sovereignty |
+| Advanced prompt engineering | OpenAI | LangChain integration, structured outputs |
+| Cost optimization | IONOS | Generally more cost-effective |
+| Token usage tracking | OpenAI | Built-in cost and usage analytics |
+| High-volume evaluations | IONOS | Better rate limits and performance |
+
+---
