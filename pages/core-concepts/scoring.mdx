@@ -1,3 +1,47 @@
 # Scoring
 
-Scoring methodology.
+Scoring is how LevelApp measures **how well AI responses match what we expect**. It combines smart AI-powered evaluations with simpler text and metadata comparisons to give you a full picture of model performance.
+
+---
+
+## How Text Responses Are Scored
+
+When an AI replies, LevelApp uses two main methods to score the response:
+
+* **LLM Scoring:**
+  LevelApp sends both the AI’s answer and the expected answer to another AI model (like OpenAI or IONOS). This “evaluator” AI reads both texts and scores how closely they match in meaning, tone, and accuracy — going beyond just word matching.
+
+* **Levenshtein F1 (String Similarity):**
+  A faster, simpler check that compares the two texts letter-by-letter, allowing for small typos or formatting differences. This method calculates a similarity score from 0 (no match) to 1 (perfect match).
+
+These two methods balance depth and speed — the LLM scorer understands meaning, while Levenshtein catches small surface differences.
+
+---
+
+## How Metadata Is Scored
+
+LevelApp also scores extra details called **metadata** — such as:
+
+* Intent (what the user meant)
+* Sentiment (positive/negative tone)
+* Categories, dates, numbers, and more
+
+Each metadata field is compared carefully using rules suited to its type:
+
+* Numbers and dates are parsed and compared precisely
+* Text fields are normalized (e.g., lowercased) and compared with some tolerance for typos
+* Scores for each metadata field are averaged into an overall metadata score
+
+This helps evaluate not just what the AI says, but how well it understands and represents the underlying meaning.
+
+---
+
+## Combining Scores from Multiple Attempts
+
+To ensure reliable results, LevelApp can run each test multiple times. It then combines all scores by calculating:
+
+* The average (mean) score
+* The variation between attempts (standard deviation)
+* Detailed per-turn scores when conversations have multiple messages
+
+This approach reduces randomness and helps spot inconsistent model behavior.
