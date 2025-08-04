@@ -1,3 +1,60 @@
-# Installation
+---
+title: Installation
+---
 
-Instructions for installing LevelApp.
+# 1. Installation
+
+Before you can evaluate AI systems, you need to install LevelApp’s backend and (optionally) frontend.
+
+## Prerequisites
+
+- **Python 3.10+**  
+- **Node.js 16+**, **npm 7+** (for the docs or web UI)  
+- **Git**  
+
+## Clone the Repo
+
+```bash
+git clone https://github.com/www-norma-dev/Levelapp.git
+cd Levelapp
+````
+
+## Backend Setup
+
+1. Create a virtual environment and activate it:
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate      # macOS/Linux
+   .\venv\Scripts\activate       # Windows PowerShell
+   ```
+
+2. Install Python dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Verify that `app.py` starts without errors:
+
+   ```bash
+   python app.py
+   # should print "✅ LevelApp API started successfully"
+   ```
+
+## Frontend Setup
+
+If you plan to work on the web UI:
+
+```bash
+cd levelapp-web
+npm install
+npm run dev      # starts at http://localhost:3000
+```
+
+---
+
+### Troubleshooting
+
+* **“Module not found” errors** → run `pip install -r requirements.txt` inside the activated venv.
+* **Port conflicts** → by default backend runs on `8080`, frontend on `3000`. Adjust in `uvicorn` or scripts if needed.

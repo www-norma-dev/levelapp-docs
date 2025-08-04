@@ -1,3 +1,45 @@
-# Configuration
+---
+title: Configuration
+---
 
-Guide to configuring LevelApp.
+# 2. Configuration
+
+After installation, point LevelApp at your LLM endpoints and set up credentials.
+
+## 1. Create a `.env` file in your repo root:
+
+```dotenv
+# .env
+OPENAI_API_KEY=sk-...
+IONOS_API_KEY=eyJ...
+IONOS_ENDPOINT=https://inference.de-txl.ionos.com/models
+GOOGLE_APPLICATION_CREDENTIALS=./googlecreds.json
+````
+
+## 2. Verify env vars are loaded
+
+```bash
+# Python check
+python - << 'EOF'
+import os, dotenv
+dotenv.load_dotenv()
+print("OpenAI:", bool(os.getenv("OPENAI_API_KEY")))
+print("Ionos:", bool(os.getenv("IONOS_API_KEY")))
+EOF
+```
+
+## 3. Model-specific config
+
+By default, the FastAPI app will register both `openai` and `ionos` providers if keys are present.
+You can override or add new evaluators in `app.py`:
+
+```python
+from level_core.evaluators.service import EvaluationService
+from level_core.evaluators.schemas import EvaluationConfig
+
+eval_svc.set_config("openai", EvaluationConfig(
+  api_key=os.getenv("OPENAI_API_KEY"),
+  model_id="gpt-4o-mini"
+))
+```
+
