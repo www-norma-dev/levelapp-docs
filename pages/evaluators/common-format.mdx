@@ -1,3 +1,116 @@
 # Common Input/Output Format
 
-Details about the common format.
+This section outlines the standardized data structures and configurations used across all evaluators in the system. By maintaining consistent input and output formats, the framework ensures seamless integration and predictable behavior regardless of which LLM provider or evaluation method you choose.
+
+### EvaluationConfig Schema
+
+All evaluators in the system share a unified configuration schema, making it easy to switch between different LLM providers without changing your evaluation logic. This standardized approach reduces complexity and improves maintainability.
+```python
+class EvaluationConfig(BaseModel):
+    api_url: Union[str, None] = None
+    api_key: Union[str, None] = None  
+    model_id: Union[str, None] = None
+    llm_config: Dict = {
+        "top-k": 5,
+        "top-p": 0.9,
+        "temperature": 0.0,
+        "max_tokens": 150,
+    }
+```
+**Configuration Explanation:**
+
+`api_url`: The base URL for the LLM provider's API. Some providers (like OpenAI) use default endpoints, so this can be left empty.
+
+`api_key`: Your authentication token or API key for the chosen provider. Keep this secure and never commit it to version control.
+
+`model_id`: The specific model you want to use. This could be a model name (like "gpt-4") or a unique identifier (like IONOS model UUIDs).
+
+`llm_config`: Provider-specific parameters that control how the model generates responses:
+
+- `top-k`: Restricts the model to consider only the top K most likely next tokens
+- `top-p`: Nucleus sampling - considers tokens until their cumulative probability reaches this threshold
+- `temperature`: Controls output randomness (0.0 = always pick most likely token, higher values = more creative/random)
+- `max_tokens`: Limits the length of generated responses to prevent excessive costs or timeouts
+
+**Configuration Examples:**
+
+```python
+# IONOS Configuration
+ionos_config = EvaluationConfig(
+    api_url="https://inference.de-txl.ionos.com/models",
+    api_key="your_ionos_jwt_token",
+    model_id="YOUR-IONOS-MODEL-ID",
+    llm_config={
+        "top-k": 5,
+        "top-p": 0.9, 
+        "temperature": 0.0,
+        "max_tokens": 150
+    }
+)
+
+# OpenAI Configuration  
+openai_config = EvaluationConfig(
+    api_url="",  # Not needed for OpenAI
+    api_key="sk-proj-...",
+    model_id="YOUR-OPENAI-MODEL-ID",
+    llm_config={
+        "temperature": 0.0,
+        "max_tokens": 150
+    }
+)
+```
+
+### EvaluationResult Schema
+
+Every evaluator returns results using this consistent structure, ensuring your application can process outputs uniformly regardless of the underlying evaluation method or LLM provider.
+
+```python
+class EvaluationResult(BaseModel):
+    match_level: int = Field(0, description="Matching score: 0-5 scale")
+    justification: str = Field("", description="Evaluator explanation")
+    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
+```
+**Results fields:**
+
+```match_level```: A standardized integer score from 0-5 indicating how well the generated content matches the expected output or criteria.
+
+```justification```: A human-readable explanation of why the evaluator assigned this score, helpful for debugging and understanding evaluation decisions
+
+```metadata```: Additional information about the evaluation process, such as token usage, costs, processing time, or provider-specific details
+
+**Example Output:**
+
+```json
+{
+    "match_level": 4,
+    "justification": "Generated text captures all essential meaning with minor stylistic differences. No important details missing.",
+    "metadata": {
+        "inputTokens": 85,
+        "outputTokens": 32,
+        "total_cost": 0.00234
+    }
+}
+```
+
+### Standard 6-Point Scoring Scale
+
+Both evaluators use the same consistent scoring system:
+
+| Score | Level | Description |
+|-------|-------|-------------|
+| **5** | Perfect Match | Semantically identical, only trivial differences |
+| **4** | Excellent Match | All essential meaning captured, minor stylistic differences |
+| **3** | Good Match | Main points accurate, minor omissions or phrasing differences |
+| **2** | Moderate Match | General idea captured, noticeable differences or missing details |
+| **1** | Poor Match | Topic addressed but significant omissions or factual errors |
+| **0** | No Match | Completely unrelated, factually incorrect, or meaningless |
+
+### Error Handling and Retry Mechanisms
+
+All evaluators implement:
+- **3 retry attempts** with exponential backoff
+- **Graceful error handling** with detailed error messages
+- **Request timeout protection**
+- **JSON parsing error recovery**
+
+---

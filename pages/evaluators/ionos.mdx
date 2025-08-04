@@ -1,3 +1,110 @@
-# IONOS Evaluator
+# IONOS Provider (European Cloud)
 
-Guide to using the IONOS evaluator.
+The IONOS provider implements the LLM as Judge methodology using IONOS Cloud's European-hosted models. It offers cost-effective, GDPR-compliant evaluation services with excellent performance for European deployments.
+
+## Available Models & Their Advantages
+
+### IONOS Custom Models
+- **Optimized for evaluation tasks** with fine-tuned prompts
+- **European data centers** ensuring GDPR compliance and low latency
+- **Cost-effective pricing** compared to major cloud providers
+- **Flexible model sizes** from efficient to high-performance
+
+### Model Selection Guide
+
+| Model Type | Use Case | Advantages |
+|------------|----------|------------|
+| **Standard Models** | General evaluations | Good balance of speed and accuracy |
+| **Efficiency Models** | High-volume processing | Fast response times, lower costs |
+| **Performance Models** | Complex evaluations | Enhanced reasoning capabilities |
+
+### Key Provider Advantages
+
+- **🇪🇺 European Hosting**: Data sovereignty and GDPR compliance
+- **💰 Cost Efficiency**: Competitive pricing for high-volume usage
+- **⚡ Low Latency**: Optimized for European users
+- **🔒 Privacy**: No data retention policies
+- **📈 Scalability**: Better rate limits for production workloads
+
+## Configuration Setup
+
+**Environment Variables:**
+```bash
+IONOS_ENDPOINT="https://inference.de-txl.ionos.com/models"
+IONOS_API_KEY="your_jwt_token_here"
+```
+
+**Programmatic Setup:**
+```python
+from level_core.evaluators.ionos import IonosEvaluator
+from level_core.evaluators.schemas import EvaluationConfig
+from logging import Logger
+
+# Configure IONOS evaluator
+config = EvaluationConfig(
+    api_url="https://inference.de-txl.ionos.com/models",
+    api_key="your_ionos_jwt_token",
+    model_id="YOUR-IONOS-MODEL-ID"
+)
+
+evaluator = IonosEvaluator(config, Logger("IONOS"))
+```
+
+### API Endpoint and Authentication
+
+IONOS uses JWT-based authentication:
+- **Endpoint:** `https://inference.de-txl.ionos.com/models`
+- **Authentication:** Bearer token (JWT)
+- **Content-Type:** `application/json`
+
+### Model-Specific Parameters
+
+```python
+llm_config = {
+    "top-k": 5,          # Limit to top K tokens
+    "top-p": 0.9,        # Nucleus sampling threshold
+    "temperature": 0.0,   # Deterministic output
+    "max_tokens": 150    # Maximum response length
+}
+```
+
+### Example Usage
+
+```python
+import asyncio
+from level_core.evaluators.ionos import IonosEvaluator
+from level_core.evaluators.schemas import EvaluationConfig
+from logging import Logger
+
+async def evaluate_with_ionos():
+    # Setup
+    config = EvaluationConfig(
+        api_url="https://inference.de-txl.ionos.com/models",
+        api_key="your_ionos_jwt_token",
+        model_id="0b6c4a15-bb8d-4092-82b0-f357b77c59fd"
+    )
+    
+    evaluator = IonosEvaluator(config, Logger("IONOS"))
+    
+    # Evaluate
+    result = await evaluator.evaluate(
+        generated_text="The capital of France is Paris.",
+        expected_text="Paris is the capital city of France."
+    )
+    
+    print(f"Score: {result.match_level}/5")
+    print(f"Reasoning: {result.justification}")
+    print(f"Tokens used: {result.metadata.get('inputTokens', 0)} + {result.metadata.get('outputTokens', 0)}")
+
+# Run evaluation
+asyncio.run(evaluate_with_ionos())
+```
+
+### IONOS-Specific Features
+
+- **European data centers** for GDPR compliance
+- **Competitive pricing** for high-volume usage
+- **Custom model selection** with specific model IDs
+- **Token usage tracking** in metadata
+
+---

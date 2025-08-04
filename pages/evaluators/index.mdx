@@ -1,3 +1,96 @@
-# Evaluators
+# LLM as Judge Evaluators
 
-Overview of evaluators.
+## The LLM as Judge Methodology
+
+LevelApp implements the **LLM as Judge** approach, where Large Language Models evaluate the quality of AI-generated responses by comparing them against reference outputs. This methodology leverages the reasoning capabilities of modern LLMs to provide nuanced, context-aware evaluations that go beyond simple string matching.
+
+### Core Concept
+
+The LLM as Judge pattern works by:
+1. **Presenting both texts** to a judge LLM (generated vs. expected)
+2. **Providing evaluation criteria** and scoring guidelines
+3. **Receiving structured feedback** with scores and justifications
+4. **Ensuring consistency** through standardized prompts and formats
+
+### Why LLM as Judge?
+
+- **Semantic Understanding**: Captures meaning beyond exact word matching
+- **Context Awareness**: Considers nuances, synonyms, and paraphrasing
+- **Detailed Feedback**: Provides explanations for scoring decisions
+- **Flexible Criteria**: Can adapt to different evaluation needs
+- **Human-like Judgment**: Mimics expert human evaluation patterns
+
+## Provider Implementations
+
+LevelApp supports multiple LLM providers for the judge role, each with specific advantages:
+
+### Architecture Overview
+
+```
+BaseEvaluator (LLM as Judge Pattern)
+├── OpenAIEvaluator (GPT Models)
+└── IonosEvaluator (IONOS Cloud Models)
+```
+
+All evaluators implement the LLM as Judge pattern with:
+- `build_prompt()` - Constructs evaluation prompts with criteria
+- `call_llm()` - Makes API calls to the judge LLM
+- `evaluate()` - Orchestrates the complete evaluation process
+
+## Provider Comparison
+
+### 🤖 OpenAI Provider (GPT Models)
+
+**Models Available:**
+- **GPT-4** - Most capable, best for complex evaluations
+- **GPT-4 Turbo** - Faster and more cost-effective 
+- **GPT-3.5 Turbo** - Budget option for simple evaluations
+
+**Advantages:**
+- Advanced reasoning and judgment capabilities
+- Structured output with function calling
+- Built-in token usage and cost tracking
+- Extensive fine-tuning and prompt engineering
+- LangChain integration for advanced workflows
+- Reliable JSON parsing and error handling
+
+**Best For:**
+- Complex evaluation criteria requiring nuanced judgment
+- Research and development environments
+- When detailed explanations and reasoning are needed
+- Advanced prompt engineering and customization
+
+### 🌩️ IONOS Provider (European Cloud)
+
+**Models Available:**
+- **Custom trained models** - Optimized for evaluation tasks
+- **Various model sizes** - From efficient to high-performance
+- **European data center models** - GDPR compliant
+
+**Advantages:**
+- Cost-effective pricing structure
+- Lower latency for European users
+- Data sovereignty and GDPR compliance
+- Direct HTTP API integration (no SDK dependencies)
+- Better rate limits for high-volume evaluations
+- Custom model fine-tuning options
+
+**Best For:**
+- European deployments requiring data sovereignty
+- High-volume evaluation scenarios
+- Cost-sensitive applications
+- Simple to moderate evaluation complexity
+- Production environments with strict compliance needs
+
+### When to Choose Each Provider
+
+| Use Case | Recommended Provider | Reason |
+|----------|---------------------|---------|
+| **European Deployment** | IONOS | Data sovereignty, lower latency, GDPR compliance |
+| **Complex Evaluations** | OpenAI | Superior reasoning, advanced prompt capabilities |
+| **Cost Optimization** | IONOS | More competitive pricing structure |
+| **Research & Development** | OpenAI | Better tooling, documentation, community support |
+| **High-Volume Production** | IONOS | Better rate limits and performance scaling |
+| **Advanced Analytics** | OpenAI | Built-in token tracking and cost analysis |
+
+---
