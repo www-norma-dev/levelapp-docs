@@ -1,3 +1,45 @@
+
+
 # Architecture
 
-System architecture of LevelApp.
+LevelApp is built around a simple but powerful flow:
+**simulate conversations → evaluate the replies → collect and return structured results**.
+
+---
+
+## Core Components
+
+LevelApp is made up of a few key building blocks:
+
+* **Simulators**
+  Run test conversations by sending prompts to AI models and collecting their responses.
+
+* **Evaluators**
+  Score the AI’s responses based on how well they match expected answers (using LLMs or string comparison).
+
+* **Scoring Logic**
+  Combines multiple scores (text and metadata) and handles repeated test attempts for more reliable results.
+
+* **Test Batches**
+  Packages of test conversations that drive the whole evaluation — you define what to test, LevelApp takes care of the rest.
+
+---
+
+## High-Level Workflow
+
+1. **Submit a batch** of test interactions (via API or UI).
+2. **Simulators** send each prompt to the AI model and collect replies.
+3. **Evaluators** compare those replies with the reference answers.
+4. **Scores and justifications** are generated for each interaction.
+5. **Results** are returned in a structured format for review or reporting.
+
+---
+
+## Why This Structure?
+
+This modular setup makes LevelApp flexible and easy to extend. You can:
+
+* Plug in different models (OpenAI, IONOS, etc.)
+* Use custom evaluation strategies
+* Run small tests or large-scale batch evaluations
+* Track model behavior over time

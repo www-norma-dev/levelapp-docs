@@ -1,3 +1,85 @@
-# Test Batches
 
-Explanation of test batches.
+# Batch Tests
+
+In **LevelApp**, a *batch test* is a structured way to evaluate how an AI model performs across multiple test cases. Each batch includes one or more test interactions, and LevelApp handles everything: sending prompts, collecting replies, scoring results, and returning detailed feedback.
+
+---
+
+## What’s Inside a Batch Test?
+
+A typical LevelApp batch test includes:
+
+* A unique **batch ID** and optional metadata (name, description, version)
+* A list of **interactions**, each with:
+
+  * A **user message** (input to the AI)
+  * A **reference reply** (what the model is expected to say)
+  * An optional **agent reply** (if already generated)
+  * **Metadata** like intent or sentiment (optional)
+* The **model ID** and **API endpoint** being tested
+* The number of **attempts** to run per interaction
+* A test name to track results
+
+---
+
+### Example
+
+Here’s an example of a LevelApp batch test:
+
+```json
+{
+  "test_batch": {
+    "id": "12345678-1234-5678-1234-567812345678",
+    "interactions": [
+      {
+        "id": "5b74c0b4-0c4a-4d1b-a6a0-bf31e0be2914",
+        "user_message": "What is IONOS?",
+        "agent_reply": "United States of America",
+        "reference_reply": "IONOS is a cloud provider in Europe based in Germany",
+        "interaction_type": "opening",
+        "reference_metadata": {
+          "intent": "greeting",
+          "sentiment": "positive"
+        },
+        "generated_metadata": {
+          "intent": "greeting",
+          "sentiment": "positive"
+        }
+      }
+    ],
+    "description": "Test conversation for main evaluation",
+    "details": {
+      "name": "Main API Test",
+      "version": "1.0"
+    }
+  },
+  "endpoint": "http://localhost:8000",
+  "model_id": "meta-llama/Llama-3.3-70B-Instruct",
+  "attempts": 1,
+  "test_name": "main_evaluate_test"
+}
+```
+
+---
+
+## How LevelApp Uses It
+
+When you submit a batch to LevelApp:
+
+1. Each user message is sent to the target model (via the provided endpoint).
+2. The model’s response is collected and compared with the reference reply.
+3. Evaluators assign scores and explanations.
+4. Metadata fields (if included) are also checked and scored.
+5. If multiple attempts are requested, results are averaged.
+6. Final results are returned in a structured, machine-readable format.
+
+---
+
+## Why Batch Testing Matters
+
+Batch testing helps you:
+
+* Evaluate model behavior across many examples
+* Detect inconsistencies or failure patterns
+* Measure both content quality and metadata accuracy
+* Run repeatable tests for tracking model changes over time

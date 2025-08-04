@@ -1,3 +1,45 @@
 # Evaluators
 
-Overview of evaluation system.
+Evaluators are the components in LevelApp responsible for **grading AI responses**. They compare the AI’s answer with the expected answer and return a score along with an explanation of how well they match.
+
+---
+
+## What Evaluators Do
+
+Evaluators act like judges that assess the content and quality of AI replies. Depending on the provider, they use different methods:
+
+* Some use **large language models (LLMs)** like OpenAI’s GPT or IONOS AI to analyze meaning, tone, and accuracy deeply.
+* Others apply simpler or customized scoring techniques as needed.
+
+Evaluators provide structured results including:
+
+* A **match level** indicating how close the AI’s response is to the reference.
+* A **justification** explaining the score.
+* Optional **metadata** such as token usage or evaluation cost.
+
+---
+
+## How Evaluators Are Managed
+
+LevelApp’s **EvaluationService** manages evaluator selection and configuration. You register evaluation settings for each provider (API keys, model IDs, etc.) and then use the service to run evaluations with the appropriate evaluator.
+
+---
+
+## Key Evaluator Implementations
+
+LevelApp supports different evaluators tailored to various AI providers. Each evaluator follows a common workflow but may differ in how it scores and interprets responses.
+
+* **OpenAIEvaluator:** Uses OpenAI’s GPT models to deeply analyze and score AI replies based on meaning and quality.
+* **IonosEvaluator:** Similar approach but with IONOS AI models.
+* **BaseEvaluator:** An abstract base class that defines the general evaluation process shared by all evaluators.
+
+---
+## Example Workflow
+
+1. The EvaluationService receives a request to evaluate an AI response.
+2. It selects the appropriate evaluator based on the configured provider.
+3. The evaluator constructs a prompt combining the AI’s output and the expected answer.
+4. It sends the prompt to the provider’s API (e.g., OpenAI).
+5. The evaluator receives a structured score and justification.
+6. The service returns the result to the caller.
+

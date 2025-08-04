@@ -1,3 +1,49 @@
-# Simulators
+### Simulators
 
-Details about conversation simulators.
+What exactly do simulators do? They test how AI models respond by sending messages, collecting replies, and scoring how well those replies match what we expect.
+
+---
+
+## What Simulators Do & How They Work
+
+Imagine you want to check how a chatbot answers questions. You prepare a list of test messages with expected replies — for example:
+
+```json
+{
+  "user_message": "What is LevelApp?",
+  "expected_reply": "It is an evaluation platform for AI."
+}
+```
+
+The simulator sends the question ("What is LevelApp?") to the AI model, collects its answer, and compares it to the expected reply. It scores the AI’s answer based on correctness, intent, tone, and other factors.
+
+This happens automatically, over many test cases, often multiple times for accuracy. The simulator records all conversations and scores so you can see how well the AI performed overall.
+
+---
+
+## Why Use Simulators?
+
+Simulators help you make sure your AI:
+
+* Answers consistently and correctly
+* Understands what users mean
+* Responds with the right tone and style
+* Behaves safely and predictably
+
+They’re especially useful when building chatbots for support, education, health, and more.
+
+---
+
+## Key Features
+
+* Run many tests at once (batch testing)
+* Repeat tests to check reliability
+* Automatic scoring from evaluation tools
+* Optional checks like sentiment or intent
+* Easy to connect with different AI providers
+
+---
+
+## How to Use Simulators
+
+Just submit your test batch (questions and expected answers) to LevelApp’s API. The simulator does the rest — sending prompts to the AI, gathering responses, scoring them, and giving you clear results.
