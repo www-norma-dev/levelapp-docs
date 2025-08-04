@@ -1,3 +1,72 @@
-# First Evaluation
+---
+title: First Evaluation
+---
 
-How to run your first evaluation.
+# 3. Your First Evaluation
+
+Let’s run a minimal conversation test to validate your setup.
+
+## 1. Check for `simple_batch.json`
+
+Ensure you have the `simple_batch.json` file in your repo root. It should include something like this:
+
+```json
+{
+  "test_batch": {
+    "id": "0001-first-eval",
+    "interactions": [
+      {
+        "id": "turn-1",
+        "user_message": "Hello, what can you do?",
+        "agent_reply": "",
+        "reference_reply": "I can evaluate AI model outputs against expectations.",
+        "interaction_type": "opening",
+        "reference_metadata": { "intent": "greeting", "sentiment": "neutral" },
+        "generated_metadata": {}
+      }
+    ],
+    "description": "First basic test"
+  },
+  "endpoint": "http://localhost:8080",
+  "model_id": "meta-llama/Llama-3.3-70B-Instruct",
+  "attempts": 1,
+  "test_name": "first_eval"
+}
+````
+
+## 2. Call the `/evaluate` endpoint through curl or use Postman:
+
+```bash
+curl -X POST http://localhost:8080/evaluate \
+  -H "Content-Type: application/json" \
+  -d @simple_batch.json | jq
+```
+
+You should see a JSON response similar to this:
+
+```json
+{
+  "message": "Evaluation completed successfully",
+  "results": {
+    "scenarios": [
+      {
+        "scenario_id": "0001-first-eval",
+        "attempts": [
+          {
+            "interactions": [ { /* ... */ } ],
+            "average_scores": { /* ... */ }
+          }
+        ],
+        "average_scores": { /* ... */ }
+      }
+    ]
+  }
+}
+```
+
+---
+
+### 3. Quick sanity checks
+
+* If you see `"Request failed"` in `agent_reply`, verify your LLM endpoint (`endpoint` + `model_id`).
+* No JSON? Check your `.env` credentials and restart the server.
