@@ -1,17 +1,17 @@
 export default {
     index: {
-        title: "Overview",
+        title: "LLM as Judge Overview",
     },
     "common-format": {
         title: "Common Input/Output Format",
     },
     openai: {
-        title: "OpenAI Evaluators",
+        title: "OpenAI Provider (GPT Models)",
     },
     ionos: {
-        title: "IONOS Evaluators", 
+        title: "IONOS Provider (European Cloud)", 
     },
     "custom-evaluators": {
-        title: "Custom Evaluators",
+        title: "Custom Judge Implementations",
     }
 }
