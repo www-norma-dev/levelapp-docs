@@ -1,3 +1,89 @@
 # Test Batch Schema
 
-Schema for test batches.
+
+### Test Batch Schema
+
+The test batch schema defines the structure for conversation evaluation data.
+
+#### BasicConversation Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Conversation identifier"
+    },
+    "interactions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/components/schemas/Interaction"
+      },
+      "description": "List of interactions in the conversation"
+    },
+    "description": {
+      "type": "string",
+      "description": "A short description of the conversation"
+    },
+    "details": {
+      "type": "object",
+      "description": "Conversation details"
+    }
+  },
+  "required": ["interactions", "description"]
+}
+```
+
+#### Interaction Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Interaction identifier"
+    },
+    "user_message": {
+      "type": "string",
+      "description": "The user's message"
+    },
+    "agent_reply": {
+      "type": "string",
+      "description": "The agent's response message"
+    },
+    "reference_reply": {
+      "type": "string",
+      "description": "The expected reference message"
+    },
+    "interaction_type": {
+      "type": "string",
+      "enum": ["opening", "development", "closure"],
+      "description": "Type of interaction"
+    },
+    "reference_metadata": {
+      "type": "object",
+      "description": "Expected metadata for this interaction"
+    },
+    "generated_metadata": {
+      "type": "object",
+      "description": "Generated metadata from the agent's response"
+    }
+  },
+  "required": ["user_message", "agent_reply", "reference_reply", "interaction_type"]
+}
+```
+
+#### InteractionType Enum
+
+```json
+{
+  "type": "string",
+  "enum": ["opening", "development", "closure"],
+  "description": "Enum representing the type of interaction"
+}
+```
+

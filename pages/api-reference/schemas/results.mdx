@@ -1,3 +1,176 @@
 # Results Schema
 
-Schema for results.
+
+### Results Schema
+
+The results schema defines the structure of evaluation results returned by the API.
+
+#### MainEvaluationResponse Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "Success message"
+    },
+    "test_name": {
+      "type": "string",
+      "description": "Name of the test run"
+    },
+    "endpoint": {
+      "type": "string",
+      "description": "LLM endpoint that was tested"
+    },
+    "model_id": {
+      "type": "string",
+      "description": "Model ID used for testing"
+    },
+    "attempts": {
+      "type": "integer",
+      "description": "Number of test attempts"
+    },
+    "results": {
+      "$ref": "#/components/schemas/EvaluationResults"
+    }
+  }
+}
+```
+
+#### EvaluationResults Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "$ref": "#/components/schemas/ScenarioResult"
+      },
+      "description": "Results for each scenario in the batch"
+    },
+    "average_scores": {
+      "type": "object",
+      "description": "Average scores across all scenarios"
+    },
+    "global_justification": {
+      "type": "object",
+      "description": "Overall evaluation justifications"
+    },
+    "execution_events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/components/schemas/ExecutionEvent"
+      },
+      "description": "Execution events and logs"
+    }
+  }
+}
+```
+
+#### ScenarioResult Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "scenario_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Scenario identifier"
+    },
+    "interactions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/components/schemas/InteractionResult"
+      },
+      "description": "Results for each interaction"
+    },
+    "average_score": {
+      "type": "number",
+      "description": "Average score for this scenario"
+    },
+    "total_execution_time": {
+      "type": "number",
+      "description": "Total execution time in seconds"
+    }
+  }
+}
+```
+
+#### InteractionResult Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "interaction_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Interaction identifier"
+    },
+    "evaluations": {
+      "type": "object",
+      "description": "Evaluation results from different metrics"
+    },
+    "extracted_metadata_evaluation": {
+      "type": "number",
+      "description": "Metadata evaluation score"
+    },
+    "execution_time": {
+      "type": "number",
+      "description": "Execution time in seconds"
+    }
+  }
+}
+```
+
+#### EvaluationResult Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "match_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Matching score: 0 = no match / failure, 5 = perfect match"
+    },
+    "justification": {
+      "type": "string",
+      "description": "Evaluator justification or explanation"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Optional extra info (token count, cost, etc.)"
+    }
+  }
+}
+```
+
+#### ExecutionEvent Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Event timestamp"
+    },
+    "level": {
+      "type": "string",
+      "enum": ["INFO", "WARNING", "ERROR"],
+      "description": "Log level"
+    },
+    "message": {
+      "type": "string",
+      "description": "Event message"
+    }
+  }
+}
+```

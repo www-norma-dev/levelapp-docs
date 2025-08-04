@@ -1,3 +1,61 @@
 # Error Handling
+## Error Codes and Handling
 
-Guide to error handling.
+### HTTP Status Codes
+
+| Code | Status | Description |
+|------|--------|-------------|
+| 200 | OK | Request successful |
+| 400 | Bad Request | Invalid request format or parameters |
+| 500 | Internal Server Error | Server error or evaluation service failure |
+
+### Error Response Format
+
+```json
+{
+  "detail": "Error description message"
+}
+```
+
+### Common Error Scenarios
+
+#### 400 Bad Request
+
+**Invalid test_batch format**
+```json
+{
+  "detail": "Invalid test_batch format: validation error for BasicConversation.interactions"
+}
+```
+
+**Missing required fields**
+```json
+{
+  "detail": "field required: test_batch"
+}
+```
+
+#### 500 Internal Server Error
+
+**Evaluation service not initialized**
+```json
+{
+  "detail": "Evaluation service not initialized. Server may need restart."
+}
+```
+
+**Evaluation failure**
+```json
+{
+  "detail": "Evaluation failed: Connection timeout to LLM endpoint"
+}
+```
+
+### Error Handling Best Practices
+
+1. **Validate Input**: Ensure test_batch follows the required schema
+2. **Check Endpoint**: Verify the LLM endpoint is accessible
+3. **Monitor Logs**: Check server logs for detailed error information
+4. **Retry Logic**: Implement exponential backoff for transient failures
+
+---

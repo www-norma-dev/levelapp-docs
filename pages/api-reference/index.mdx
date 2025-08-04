@@ -1,3 +1,19 @@
 # API Reference
 
-Overview of API.
+The LevelApp API is a FastAPI-based service designed for evaluating conversation quality and performance of Large Language Models (LLMs). The API provides endpoints for running batch evaluations against LLM endpoints and analyzing the results.
+
+**Base URL**: `http://localhost:8080` (default)
+
+**API Version**: 1.0.0
+
+**Content Type**: `application/json`
+
+### Key Features
+
+- **Conversation Evaluation**: Evaluate LLM responses against reference conversations
+- **Batch Testing**: Run multiple test scenarios in a single request
+- **Multiple Evaluators**: Support for IONOS and OpenAI evaluation providers
+- **Comprehensive Metrics**: Detailed scoring and justification for each interaction
+- **Async Processing**: Efficient handling of multiple concurrent evaluations
+
+---

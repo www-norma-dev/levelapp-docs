@@ -1,3 +1,21 @@
 # Authentication
+## Authentication Details
 
-Details about authentication.
+Currently, the LevelApp API does not require authentication for basic usage. However, the following environment variables are used for configuring evaluation providers:
+
+### Environment Variables
+
+| Variable | Description | Required | Example |
+|----------|-------------|----------|---------|
+| `IONOS_API_KEY` | API key for IONOS evaluation service | Optional | `your_ionos_jwt_token` |
+| `IONOS_ENDPOINT` | IONOS API endpoint URL | Optional | `https://inference.de-txl.ionos.com/models` |
+| `OPENAI_API_KEY` | API key for OpenAI evaluation service | Optional | `sk-proj-...` |
+
+### Provider Configuration
+
+The API automatically configures evaluation providers based on available environment variables:
+
+- **IONOS Provider**: Used for cost-effective, high-volume evaluations
+- **OpenAI Provider**: Used for advanced evaluation capabilities with built-in analytics
+
+---

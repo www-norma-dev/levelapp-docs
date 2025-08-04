@@ -1,3 +1,122 @@
 # Evaluate Endpoint
 
-Documentation for the /evaluate endpoint.
+
+### /evaluate endpoint
+
+**POST** `/evaluate`
+
+Evaluates a conversation batch against an LLM endpoint.
+
+#### Request Headers
+
+```
+Content-Type: application/json
+```
+
+#### Request Body
+
+```json
+{
+  "test_batch": {
+    "id": "12345678-1234-5678-1234-567812345678",
+    "interactions": [
+      {
+        "id": "5b74c0b4-0c4a-4d1b-a6a0-bf31e0be2914",
+        "user_message": "What does USA stand for?",
+        "agent_reply": "United States of America",
+        "reference_reply": "United States of America",
+        "interaction_type": "opening",
+        "reference_metadata": {
+          "intent": "greeting",
+          "sentiment": "positive"
+        },
+        "generated_metadata": {
+          "intent": "greeting",
+          "sentiment": "positive"
+        }
+      }
+    ],
+    "description": "Batch test for account support scenarios",
+    "details": {
+      "name": "Account Support Batch Test",
+      "version": "1.0",
+      "created_at": "2023-10-01T12:00:00Z",
+      "updated_at": "2023-10-01T12:00:00Z"
+    }
+  },
+  "endpoint": "http://localhost:8000",
+  "model_id": "meta-llama/Llama-3.3-70B-Instruct",
+  "attempts": 1,
+  "test_name": "api_test"
+}
+```
+
+#### Request Parameters
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `test_batch` | object | Yes | - | The test batch data in batch_test.json format |
+| `endpoint` | string | No | `"http://localhost:8000"` | LLM endpoint to test against |
+| `model_id` | string | No | `"meta-llama/Llama-3.3-70B-Instruct"` | Model ID for request headers |
+| `attempts` | integer | No | `1` | Number of test attempts |
+| `test_name` | string | No | `"api_test"` | Name for the test run |
+
+#### Response
+
+**Success (200 OK)**
+
+```json
+{
+  "message": "Evaluation completed successfully",
+  "test_name": "api_test",
+  "endpoint": "http://localhost:8000",
+  "model_id": "meta-llama/Llama-3.3-70B-Instruct",
+  "attempts": 1,
+  "results": {
+    "scenarios": [
+      {
+        "scenario_id": "12345678-1234-5678-1234-567812345678",
+        "interactions": [
+          {
+            "interaction_id": "5b74c0b4-0c4a-4d1b-a6a0-bf31e0be2914",
+            "evaluations": {
+              "response_quality": {
+                "match_level": 4,
+                "justification": "Generated text captures all essential meaning with minor stylistic differences.",
+                "metadata": {
+                  "inputTokens": 85,
+                  "outputTokens": 32,
+                  "total_cost": 0.00234
+                }
+              }
+            },
+            "extracted_metadata_evaluation": 0.85,
+            "execution_time": 1.23
+          }
+        ],
+        "average_score": 4.2,
+        "total_execution_time": 2.45
+      }
+    ],
+    "average_scores": {
+      "response_quality": 4.2,
+      "metadata_accuracy": 0.85
+    },
+    "global_justification": {
+      "response_quality": "Overall high-quality responses with consistent accuracy"
+    },
+    "execution_events": [
+      {
+        "timestamp": "2023-10-01T12:00:00Z",
+        "level": "INFO",
+        "message": "Starting batch test for batch: api_test"
+      }
+    ]
+  }
+}
+```
+
+#### Error Responses
+
+- **400 Bad Request**: Invalid test_batch format
+- **500 Internal Server Error**: Evaluation service not initialized or evaluation failed
