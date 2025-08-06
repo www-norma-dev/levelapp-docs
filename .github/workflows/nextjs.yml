@@ -50,12 +50,6 @@ jobs:
       - name: Build Next.js (static export)
         run: ${{ steps.detect.outputs.runner }} next build
 
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-        with:
-          static_site_generator: next
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -66,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.pages.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
