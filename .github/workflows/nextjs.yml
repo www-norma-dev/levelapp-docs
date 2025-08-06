@@ -30,7 +30,6 @@ jobs:
 
       - name: Detect package manager
         id: detect
-        working-directory: docs
         run: |
           if [ -f yarn.lock ]; then
             echo "manager=yarn" >> $GITHUB_OUTPUT
@@ -46,11 +45,9 @@ jobs:
           fi
 
       - name: Install dependencies
-        working-directory: docs
         run: ${{ steps.detect.outputs.manager }} ${{ steps.detect.outputs.command }}
 
       - name: Build Next.js (static export)
-        working-directory: docs
         run: ${{ steps.detect.outputs.runner }} next build
 
       - name: Setup Pages
