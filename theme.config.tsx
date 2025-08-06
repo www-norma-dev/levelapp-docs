@@ -13,7 +13,7 @@ const config: DocsThemeConfig = {
   chat: { link: "https://discord.gg/levelapp" },
   feedback: { content: "Have suggestions? Let us know →", labels: "feedback" },
   editLink: { content: null },
-  docsRepositoryBase: "https://github.com/www-norma-dev/levelapp-docs/",
+  docsRepositoryBase: "https://github.com/www-norma-dev/levelapp-docs",
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
