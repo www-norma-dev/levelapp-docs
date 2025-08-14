@@ -14,7 +14,7 @@ OPENAI_API_KEY=sk-...
 IONOS_API_KEY=eyJ...
 IONOS_ENDPOINT=https://inference.de-txl.ionos.com/models
 GOOGLE_APPLICATION_CREDENTIALS=./googlecreds.json
-````
+```
 
 ## 2. Verify env vars are loaded
 
@@ -43,3 +43,34 @@ eval_svc.set_config("openai", EvaluationConfig(
 ))
 ```
 
+## 4. Firestore Connection Methods
+
+LevelApp supports **two ways** to connect to a Firestore database. Choose **one** of the following methods:
+
+### Option 1: Service Account JSON Key
+
+Add the path to your service account JSON key in the `.env` file:
+
+```dotenv
+GOOGLE_APPLICATION_CREDENTIALS=./googlecreds.json
+```
+
+---
+
+### Option 2: Google Cloud SDK Default Credentials
+
+Authenticate locally using the Google Cloud SDK and specify your project ID in the YAML config:
+
+```bash
+gcloud auth application-default login
+```
+
+```yaml
+database:
+  type: firestore
+  project_id: your-project-id
+```
+
+---
+
+> **Important:** You must configure either the Service Account JSON key or the Google Cloud SDK method. If both or neither are provided, LevelApp will raise an error.
